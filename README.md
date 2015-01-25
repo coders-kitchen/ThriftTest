@@ -39,3 +39,17 @@ For now all settings needs to be done within the Application class.
 ## Adding new PerformanceTestRunner
 
 Simply implement the class PerformanceTestRun and add your class within the Application.registerRunner method.
+
+
+## Example output
+
+    round 1 of ... (as many as rounds)
+    ...
+
+                                                 Class,                    Event, #Events,            Min,        Average,            Max
+    CombinedStructureWithConcreteObjectPerformanceTest,                SERIALIZE,   89990,          0E-12, 0.000002200244, 0.003000000000
+                      CombinedStructurePerformanceTest,                SERIALIZE,   89990,          0E-12, 0.000006122903, 0.185000000000
+                        SimpleStructurePerformanceTest,                SERIALIZE,   89990,          0E-12, 0.000003733748, 0.027000000000
+    CombinedStructureWithConcreteObjectPerformanceTest,              DESERIALIZE,   89990,          0E-12, 0.000001666852, 0.006000000000
+                      CombinedStructurePerformanceTest,              DESERIALIZE,   89990,          0E-12, 0.000002722525, 0.029000000000
+                        SimpleStructurePerformanceTest,              DESERIALIZE,   89990,          0E-12, 0.000002266919, 0.023000000000

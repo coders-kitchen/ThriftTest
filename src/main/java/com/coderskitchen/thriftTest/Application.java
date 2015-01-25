@@ -11,10 +11,10 @@ import java.util.List;
 
 public class Application {
 
-    public static final int NUMBER_OF_ELEMENTS_TO_SERIALIZE = 1_000_000;
+    public static final int NUMBER_OF_ELEMENTS_TO_SERIALIZE = 10_000;
     public static final int NUMBER_OF_MAP_ELEMENTS = 10;
 
-    public static final int ROUNDS = 100;
+    public static final int ROUNDS = 10;
     public static final List<PerformanceTestRun> PERFORMANCE_TEST_RUNS = new ArrayList<>();
 
     public static final StatisticsCollectorImpl STATISTICS_COLLECTOR = new StatisticsCollectorImpl();
