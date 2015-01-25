@@ -3,9 +3,9 @@ Thrift Test is a small project that tries to figure out how thrift performs in s
 
 ## Covered so far are
 
-  * Structure with header information and a map of type <string, string> as body
+  * Structure with header information and a map of type \<string, string\> as body
   * Structure with header information and a binary data type as body
-    * First variant provides a map of type <string, string> as body content
+    * First variant provides a map of type \<string, string\> as body content
     * Second variant provides a structure with 10 fields as body content
 
 ## Requirements
