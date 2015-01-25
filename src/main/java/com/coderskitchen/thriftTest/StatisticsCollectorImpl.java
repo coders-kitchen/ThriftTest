@@ -1,4 +1,4 @@
-package com.coderskitchen.serializerPerformance;
+package com.coderskitchen.thriftTest;
 
 import java.math.BigDecimal;
 import java.math.MathContext;

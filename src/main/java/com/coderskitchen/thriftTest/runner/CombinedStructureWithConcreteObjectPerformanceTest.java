@@ -1,47 +1,39 @@
-package com.coderskitchen.serializerPerformance.runner;
+package com.coderskitchen.thriftTest.runner;
 
-import com.coderskitchen.serializerPerformance.gen.thrift.CombinedStructure;
-import com.coderskitchen.serializerPerformance.gen.thrift.Header;
-import com.coderskitchen.serializerPerformance.gen.thrift.ObjectMap;
+import com.coderskitchen.thriftTest.gen.thrift.CombinedStructure;
+import com.coderskitchen.thriftTest.gen.thrift.EventObject;
+import com.coderskitchen.thriftTest.gen.thrift.Header;
 import org.apache.thrift.TDeserializer;
 import org.apache.thrift.TException;
 import org.apache.thrift.TSerializer;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 /**
  * Created by Peter on 25.01.2015.
  */
-public class CombinedStructurePerformanceTest extends PerformanceTestRun<CombinedStructure, byte[]> {
+public class CombinedStructureWithConcreteObjectPerformanceTest extends PerformanceTestRun<CombinedStructure, byte[]> {
 
-    public final int MAP_ELEMENTS;
     public static  final TSerializer SERIALIZER = new TSerializer();
     public static final TDeserializer DESERIALIZER = new TDeserializer();
-    public ObjectMap[] objectMaps;
+    public EventObject[] eventObjects;
 
-    public CombinedStructurePerformanceTest(int numberOfElementsToSerialize, int numberOfMapElements) {
+    public CombinedStructureWithConcreteObjectPerformanceTest(int numberOfElementsToSerialize) {
         super(numberOfElementsToSerialize);
-        MAP_ELEMENTS = numberOfMapElements;
-        objectMaps = new ObjectMap[numberOfElementsToSerialize];
+        eventObjects = new EventObject[numberOfElementsToSerialize];
     }
 
     @Override
     protected CombinedStructure createElement(int index) {
         CombinedStructure simpleStructure = new CombinedStructure(new Header("SomeHeader").setVersion(index));
-        Map<String, String> body = new HashMap<String, String>();
-        for (int mapIndex = 0; mapIndex < MAP_ELEMENTS; mapIndex++) {
-            body.put("KEY_"+mapIndex, UUID.randomUUID().toString());
-        }
-        objectMaps[index] = new ObjectMap(body);
+        eventObjects[index] = new EventObject(index, "Some Name" + index, index % 2 == 0, UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString());
         return simpleStructure;
     }
 
     @Override
     protected byte[] serializeElement(int index, CombinedStructure toSerializedObject) {
         try {
-            toSerializedObject.setBody(SERIALIZER.serialize(objectMaps[index]));
+            toSerializedObject.setBody(SERIALIZER.serialize(eventObjects[index]));
             return SERIALIZER.serialize(toSerializedObject);
         } catch (TException e) {
             e.printStackTrace();
@@ -54,7 +46,7 @@ public class CombinedStructurePerformanceTest extends PerformanceTestRun<Combine
         try {
             CombinedStructure combinedStructure = new CombinedStructure();
             DESERIALIZER.deserialize(combinedStructure, bytes);
-            ObjectMap objectMap = new ObjectMap();
+            EventObject objectMap = new EventObject();
             DESERIALIZER.deserialize(objectMap, combinedStructure.getBody());
         } catch (TException e) {
             e.printStackTrace();

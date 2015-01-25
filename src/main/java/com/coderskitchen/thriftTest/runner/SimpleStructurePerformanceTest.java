@@ -1,7 +1,7 @@
-package com.coderskitchen.serializerPerformance.runner;
+package com.coderskitchen.thriftTest.runner;
 
-import com.coderskitchen.serializerPerformance.gen.thrift.Header;
-import com.coderskitchen.serializerPerformance.gen.thrift.SimpleStructure;
+import com.coderskitchen.thriftTest.gen.thrift.Header;
+import com.coderskitchen.thriftTest.gen.thrift.SimpleStructure;
 import org.apache.thrift.TDeserializer;
 import org.apache.thrift.TException;
 import org.apache.thrift.TSerializer;

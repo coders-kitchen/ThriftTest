@@ -1,7 +1,7 @@
-package com.coderskitchen.serializerPerformance.runner;
+package com.coderskitchen.thriftTest.runner;
 
-import com.coderskitchen.serializerPerformance.StatisticsCollector;
-import com.coderskitchen.serializerPerformance.TestEvent;
+import com.coderskitchen.thriftTest.StatisticsCollector;
+import com.coderskitchen.thriftTest.TestEvent;
 
 import java.time.Instant;
 

@@ -1,4 +1,4 @@
-namespace java com.coderskitchen.serializerPerformance.gen.thrift
+namespace java com.coderskitchen.thriftTest.gen.thrift
 
 struct Header {
   1: required string name;

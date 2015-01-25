@@ -1,9 +1,9 @@
-package com.coderskitchen.serializerPerformance;
+package com.coderskitchen.thriftTest;
 
-import com.coderskitchen.serializerPerformance.runner.CombinedStructurePerformanceTest;
-import com.coderskitchen.serializerPerformance.runner.CombinedStructureWithConcreteObjectPerformanceTest;
-import com.coderskitchen.serializerPerformance.runner.PerformanceTestRun;
-import com.coderskitchen.serializerPerformance.runner.SimpleStructurePerformanceTest;
+import com.coderskitchen.thriftTest.runner.CombinedStructurePerformanceTest;
+import com.coderskitchen.thriftTest.runner.CombinedStructureWithConcreteObjectPerformanceTest;
+import com.coderskitchen.thriftTest.runner.PerformanceTestRun;
+import com.coderskitchen.thriftTest.runner.SimpleStructurePerformanceTest;
 
 import java.util.ArrayList;
 import java.util.Collections;
