@@ -63,7 +63,7 @@ public abstract class PerformanceTestRun<TO_SERIALIZE, SERIALIZER_OUTPUT> {
     }
 
     private void storeDurationAfterWarmUpPeriod(int index, TestEvent event, long start, long end) {
-        if (setWarmUpRoundsForTestRun < index) {
+        if (setWarmUpRoundsForTestRun <= index) {
             storeDuration(event, start, end);
         }
     }

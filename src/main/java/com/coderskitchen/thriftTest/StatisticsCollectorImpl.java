@@ -11,13 +11,9 @@ public class StatisticsCollectorImpl implements StatisticsCollector {
 
     private final List<String> runners = new ArrayList<>();
 
-    private boolean acceptEvents = false;
 
 
     public void addDuration(Class runner, TestEvent testEvent, long start, long end) {
-        if (!acceptEvents) {
-            return;
-        }
         String name = runner.getSimpleName();
         addRunnerToListIfMissing(name);
         statistics.computeIfAbsent(name, k -> new HashMap<>());
@@ -29,10 +25,6 @@ public class StatisticsCollectorImpl implements StatisticsCollector {
         if (!this.runners.contains(name)) {
             this.runners.add(name);
         }
-    }
-
-    public void acceptEvents() {
-        acceptEvents = true;
     }
 
     public void printStatistics(TestEvent... testEvents) {

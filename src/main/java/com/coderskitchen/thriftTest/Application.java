@@ -72,6 +72,13 @@ public class Application {
                 case "--verbose":
                     verbose = true;
                     break;
+                case "--listOnly":
+                    registerRunner(0, 0);
+                    for (PerformanceTestRun performanceTestRun : PERFORMANCE_TEST_RUNS) {
+                        System.out.println(performanceTestRun.getClass().getSimpleName());
+                    }
+                    System.exit(0);
+                    break;
             }
         }
 
@@ -100,27 +107,12 @@ public class Application {
         System.out.println("Overall execution time " + Duration.between(start, end));
     }
 
-    private static void runTest(int rounds, String runnerToExecute) {
-        PerformanceTestRun testToRun = null;
-        for (PerformanceTestRun performanceTestRun : PERFORMANCE_TEST_RUNS) {
-            if(performanceTestRun.getClass().getSimpleName().equals(runnerToExecute)) {
-                testToRun = performanceTestRun;
-                break;
-            }
-        }
-        assert testToRun == null : "No runner found matching " + runnerToExecute;
-        for (int round = 0; round < rounds; round++) {
-            logIfNotSilent("round %d of %d%n", round, rounds);
-            testToRun.runTest();
-        }
-    }
-
-
     private static void registerRunner(int elementsPerRound, int numberOfMapElements) {
         PERFORMANCE_TEST_RUNS.add(new CombinedStructureWithConcreteObjectPerformanceTest(elementsPerRound));
         PERFORMANCE_TEST_RUNS.add(new CombinedStructurePerformanceTest(elementsPerRound, numberOfMapElements));
         PERFORMANCE_TEST_RUNS.add(new SimpleStructurePerformanceTest(elementsPerRound, numberOfMapElements));
     }
+
 
     private static void registerStatisticsCollector() {
         for (PerformanceTestRun performanceTestRun : PERFORMANCE_TEST_RUNS) {
@@ -136,7 +128,6 @@ public class Application {
     }
 
     private static void runTests(int rounds) {
-        STATISTICS_COLLECTOR.acceptEvents();
         for (int round = 1; round <= rounds; round++) {
             logIfNotSilent("round %d of %d%n", round, rounds);
             Collections.shuffle(PERFORMANCE_TEST_RUNS);
@@ -144,6 +135,21 @@ public class Application {
                 logIfNotSilent("\t" + performanceTestRun.getClass().getSimpleName());
                 performanceTestRun.runTest();
             }
+        }
+    }
+
+    private static void runTest(int rounds, String runnerToExecute) {
+        PerformanceTestRun testToRun = null;
+        for (PerformanceTestRun performanceTestRun : PERFORMANCE_TEST_RUNS) {
+            if(performanceTestRun.getClass().getSimpleName().equals(runnerToExecute)) {
+                testToRun = performanceTestRun;
+                break;
+            }
+        }
+        assert testToRun == null : "No runner found matching " + runnerToExecute;
+        for (int round = 1; round <= rounds; round++) {
+            logIfNotSilent("round %d of %d%n", round, rounds);
+            testToRun.runTest();
         }
     }
 

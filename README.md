@@ -29,6 +29,7 @@ from the source directory of the project
   * --warmUpPercentile : How many of the first elements per round should be ignored for statistic gathering (Default: 10%)
   * --runnerToExecute : Which runner should be executed? Enables solely runs. (Default: all)
   * --verbose : Should the tool also print information about the current round and test runner? (Default: false)
+  * --listOnly : List the existing registered test runner and exits.
   
 ## Processing
 
