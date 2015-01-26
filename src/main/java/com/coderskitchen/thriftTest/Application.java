@@ -13,14 +13,15 @@ import java.util.List;
 
 public class Application {
 
-    public static final String ALL = "all";
-    private static boolean verbose = false;
+    private static boolean verbose = Defaults.VERBOSE;
 
     private class Defaults {
         public static final int ELEMENTS_PER_ROUND = 200_000;
         public static final int MAP_ELEMENTS = 10;
         public static final int WARM_UP_PERCENTILE = 10;
         public static final int ROUNDS = 5;
+        public static final boolean VERBOSE = false;
+        public static final String RUNNER_TO_EXECUTE = "all";
 
     }
     public static final List<PerformanceTestRun> PERFORMANCE_TEST_RUNS = new ArrayList<>();
@@ -33,7 +34,7 @@ public class Application {
         int mapElements = Defaults.MAP_ELEMENTS;
         int rounds = Defaults.ROUNDS;
         int warmUpPercentile = Defaults.WARM_UP_PERCENTILE;
-        String runnerToExecute = ALL;
+        String runnerToExecute = Defaults.RUNNER_TO_EXECUTE;
 
         for (int i = 0, argsLength = args.length; i < argsLength; i++) {
             String arg = args[i];
@@ -87,7 +88,7 @@ public class Application {
         System.out.println("\t      Verbose mode : " + verbose);
 
         Instant start = Instant.now();
-        if(ALL.equalsIgnoreCase(runnerToExecute)) {
+        if(Defaults.RUNNER_TO_EXECUTE.equalsIgnoreCase(runnerToExecute)) {
             runTests(rounds);
         } else {
             runTest(rounds, runnerToExecute);

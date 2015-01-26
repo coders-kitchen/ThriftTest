@@ -11,6 +11,7 @@ Thrift Test is a small project that tries to figure out how thrift performs in s
 ## Requirements
 
   * Thrift compiler > 0.9
+  * Java 1.8+
 
 ## Installation
 
@@ -22,18 +23,19 @@ from the source directory of the project
 
 ## Parameters
 
-For now all settings needs to be done within the Application class.
-
-  * NUMBER\_OF\_ELEMENTS\_TO\_SERIALIZE : elements created, serialized, deserialized within one round per test runner
-  * NUMBER\_OF\_MAP\_ELEMENTS : Number of elements created for the map related structures
-  * ROUNDS : Number of overall rounds
+  * --elementsPerRound : elements created, serialized, deserialized within one round per test runner (Default: 200_000)
+  * --mapElements : Number of elements created for the map related structures (Default: 10)
+  * --rounds : Number of overall rounds (Default 5)
+  * --warmUpPercentile : How many of the first elements per round should be ignored for statistic gathering (Default: 10%)
+  * --runnerToExecute : Which runner should be executed? Enables solely runs. (Default: all)
+  * --verbose : Should the tool also print information about the current round and test runner? (Default: false)
   
 ## Processing
 
   1. Register runners
   2. Register statistics collector / runner
   3. set warm up rounds per test runner and round (at the moment the first 10% of the NUMBER\_OF\_ELEMENTS\_TO\_SERIALIZE are discarded for performance counting)
-  4. shuffle registered runners and run each of them
+  4. if all runners should be executed: shuffle registered runners and run each of them. Otherwise run single runner.
   5. print result
  
 ## Adding new PerformanceTestRunner
@@ -43,13 +45,19 @@ Simply implement the class PerformanceTestRun and add your class within the Appl
 
 ## Example output
 
-    round 1 of ... (as many as rounds)
-    ...
+    Starting test run with parameters
+    	   Elements in Map : 10
+    	Elements per Round : 100000
+    	            Rounds : 5
+    	Warm up percentile : 10% of 100000
+    	 Runner to execute : all
+    	      Verbose mode : false
+                                                 Class,                    Event, #Events,    Min (Nanos),Average (Nanos),    Max (Nanos)
+                        SimpleStructurePerformanceTest,                SERIALIZE,  449995,         2138.0,           2699,      8739530.0
+    CombinedStructureWithConcreteObjectPerformanceTest,                SERIALIZE,  449995,         1282.0,           2029,    6.2491741E7
+                      CombinedStructurePerformanceTest,                SERIALIZE,  449995,         2138.0,           3356,    8.1037795E7
+                        SimpleStructurePerformanceTest,              DESERIALIZE,  449995,         1282.0,           1983,    3.8963094E7
+    CombinedStructureWithConcreteObjectPerformanceTest,              DESERIALIZE,  449995,          427.0,           1037,    4.3336279E7
+                      CombinedStructurePerformanceTest,              DESERIALIZE,  449995,         1282.0,           2202,    9.2002834E7
 
-                                                 Class,                    Event, #Events,            Min,        Average,            Max
-    CombinedStructureWithConcreteObjectPerformanceTest,                SERIALIZE,   89990,          0E-12, 0.000002200244, 0.003000000000
-                      CombinedStructurePerformanceTest,                SERIALIZE,   89990,          0E-12, 0.000006122903, 0.185000000000
-                        SimpleStructurePerformanceTest,                SERIALIZE,   89990,          0E-12, 0.000003733748, 0.027000000000
-    CombinedStructureWithConcreteObjectPerformanceTest,              DESERIALIZE,   89990,          0E-12, 0.000001666852, 0.006000000000
-                      CombinedStructurePerformanceTest,              DESERIALIZE,   89990,          0E-12, 0.000002722525, 0.029000000000
-                        SimpleStructurePerformanceTest,              DESERIALIZE,   89990,          0E-12, 0.000002266919, 0.023000000000
+    Overall execution time PT23.408S
