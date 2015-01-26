@@ -16,24 +16,23 @@ public class CombinedStructureWithConcreteObjectPerformanceTest extends Performa
 
     public static  final TSerializer SERIALIZER = new TSerializer();
     public static final TDeserializer DESERIALIZER = new TDeserializer();
-    public EventObject[] eventObjects;
+    public EventObject eventObject;
 
     public CombinedStructureWithConcreteObjectPerformanceTest(int numberOfElementsToSerialize) {
         super(numberOfElementsToSerialize);
-        eventObjects = new EventObject[numberOfElementsToSerialize];
     }
 
     @Override
     protected CombinedStructure createElement(int index) {
         CombinedStructure simpleStructure = new CombinedStructure(new Header("SomeHeader").setVersion(index));
-        eventObjects[index] = new EventObject(index, "Some Name" + index, index % 2 == 0, UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString());
+        eventObject = new EventObject(index, "Some Name" + index, index % 2 == 0, UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString());
         return simpleStructure;
     }
 
     @Override
     protected byte[] serializeElement(int index, CombinedStructure toSerializedObject) {
         try {
-            toSerializedObject.setBody(SERIALIZER.serialize(eventObjects[index]));
+            toSerializedObject.setBody(SERIALIZER.serialize(eventObject));
             return SERIALIZER.serialize(toSerializedObject);
         } catch (TException e) {
             e.printStackTrace();

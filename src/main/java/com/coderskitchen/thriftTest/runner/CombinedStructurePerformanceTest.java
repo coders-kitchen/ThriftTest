@@ -19,12 +19,11 @@ public class CombinedStructurePerformanceTest extends PerformanceTestRun<Combine
     public final int MAP_ELEMENTS;
     public static  final TSerializer SERIALIZER = new TSerializer();
     public static final TDeserializer DESERIALIZER = new TDeserializer();
-    public ObjectMap[] objectMaps;
+    public ObjectMap objectMap;
 
     public CombinedStructurePerformanceTest(int numberOfElementsToSerialize, int numberOfMapElements) {
         super(numberOfElementsToSerialize);
         MAP_ELEMENTS = numberOfMapElements;
-        objectMaps = new ObjectMap[numberOfElementsToSerialize];
     }
 
     @Override
@@ -34,14 +33,14 @@ public class CombinedStructurePerformanceTest extends PerformanceTestRun<Combine
         for (int mapIndex = 0; mapIndex < MAP_ELEMENTS; mapIndex++) {
             body.put("KEY_"+mapIndex, UUID.randomUUID().toString());
         }
-        objectMaps[index] = new ObjectMap(body);
+        objectMap = new ObjectMap(body);
         return simpleStructure;
     }
 
     @Override
     protected byte[] serializeElement(int index, CombinedStructure toSerializedObject) {
         try {
-            toSerializedObject.setBody(SERIALIZER.serialize(objectMaps[index]));
+            toSerializedObject.setBody(SERIALIZER.serialize(objectMap));
             return SERIALIZER.serialize(toSerializedObject);
         } catch (TException e) {
             e.printStackTrace();
