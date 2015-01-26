@@ -11,27 +11,59 @@ import java.util.List;
 
 public class Application {
 
-    public static final int NUMBER_OF_ELEMENTS_TO_SERIALIZE = 10_000;
-    public static final int NUMBER_OF_MAP_ELEMENTS = 10;
+    private class Defaults {
+        public static final int ELEMENTS_PER_ROUND = 200_000;
+        public static final int MAP_ELEMENTS = 10;
 
-    public static final int ROUNDS = 10;
+        public static final int ROUNDS = 5;
+
+    }
     public static final List<PerformanceTestRun> PERFORMANCE_TEST_RUNS = new ArrayList<>();
 
     public static final StatisticsCollectorImpl STATISTICS_COLLECTOR = new StatisticsCollectorImpl();
 
     public static void main(String[] args) {
-        registerRunner();
+
+        int elementsPerRound = Defaults.ELEMENTS_PER_ROUND;
+        int mapElements = Defaults.MAP_ELEMENTS;
+        int rounds = Defaults.ROUNDS;
+
+        for (int i = 0, argsLength = args.length; i < argsLength; i++) {
+            String arg = args[i];
+            switch (arg) {
+                case "--mapElements":
+                    i++;
+                    if(i < argsLength) {
+                        mapElements = Integer.parseInt(args[i]);
+                    }
+                    break;
+                case "--rounds":
+                    i++;
+                    if(i < argsLength) {
+                        rounds = Integer.parseInt(args[i]);
+                    }
+                    break;
+                case "--elementsPerRound":
+                    i++;
+                    if(i < argsLength) {
+                        elementsPerRound = Integer.parseInt(args[i]);
+                    }
+                    break;
+            }
+        }
+
+        registerRunner(elementsPerRound, mapElements);
         registerStatisticsCollector();
-        setWarmUpRoundsForTestRuns();
-        runTests();
+        setWarmUpRoundsForTestRuns(elementsPerRound);
+        runTests(rounds);
         printStatistics();
     }
 
 
-    private static void registerRunner() {
-        PERFORMANCE_TEST_RUNS.add(new CombinedStructureWithConcreteObjectPerformanceTest(NUMBER_OF_ELEMENTS_TO_SERIALIZE));
-        PERFORMANCE_TEST_RUNS.add(new CombinedStructurePerformanceTest(NUMBER_OF_ELEMENTS_TO_SERIALIZE, NUMBER_OF_MAP_ELEMENTS));
-        PERFORMANCE_TEST_RUNS.add(new SimpleStructurePerformanceTest(NUMBER_OF_ELEMENTS_TO_SERIALIZE, NUMBER_OF_MAP_ELEMENTS));
+    private static void registerRunner(int elementsPerRound, int numberOfMapElements) {
+        PERFORMANCE_TEST_RUNS.add(new CombinedStructureWithConcreteObjectPerformanceTest(elementsPerRound));
+        PERFORMANCE_TEST_RUNS.add(new CombinedStructurePerformanceTest(elementsPerRound, numberOfMapElements));
+        PERFORMANCE_TEST_RUNS.add(new SimpleStructurePerformanceTest(elementsPerRound, numberOfMapElements));
     }
 
     private static void registerStatisticsCollector() {
@@ -40,17 +72,17 @@ public class Application {
         }
     }
 
-    private static void setWarmUpRoundsForTestRuns() {
-        int warmUpRoundsForTestRun = NUMBER_OF_ELEMENTS_TO_SERIALIZE/10;
+    private static void setWarmUpRoundsForTestRuns(int elementsPerRound) {
+        int warmUpRoundsForTestRun = elementsPerRound /10;
         for (PerformanceTestRun performanceTestRun : PERFORMANCE_TEST_RUNS) {
             performanceTestRun.setWarmUpRoundsForTestRun(warmUpRoundsForTestRun);
         }
     }
 
-    private static void runTests() {
+    private static void runTests(int rounds) {
         STATISTICS_COLLECTOR.acceptEvents();
-        for (int round = 1; round <= ROUNDS; round++) {
-            System.out.printf("round %d of %d%s%n", round, ROUNDS, " measurement");
+        for (int round = 1; round <= rounds; round++) {
+            System.out.printf("round %d of %d%s%n", round, rounds, " measurement");
             Collections.shuffle(PERFORMANCE_TEST_RUNS);
             for (PerformanceTestRun performanceTestRun : PERFORMANCE_TEST_RUNS) {
                 System.out.println("\t" + performanceTestRun.getClass().getSimpleName());

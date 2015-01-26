@@ -3,8 +3,6 @@ package com.coderskitchen.thriftTest.runner;
 import com.coderskitchen.thriftTest.StatisticsCollector;
 import com.coderskitchen.thriftTest.TestEvent;
 
-import java.time.Instant;
-
 /**
  * Created by Peter on 25.01.2015.
  */
@@ -18,6 +16,10 @@ public abstract class PerformanceTestRun<TO_SERIALIZE, SERIALIZER_OUTPUT> {
         // DO NOTHING
     };
 
+    /**
+     * Constructor, takes the number of elements to be serialized and deserialized
+     * @param numberOfElementsToSerialize
+     */
     public PerformanceTestRun(int numberOfElementsToSerialize) {
         this.numberOfElementsToSerialize = numberOfElementsToSerialize;
     }
@@ -38,29 +40,29 @@ public abstract class PerformanceTestRun<TO_SERIALIZE, SERIALIZER_OUTPUT> {
     }
 
     private void deserializeElementAndMeasureDuration(int index, SERIALIZER_OUTPUT serializerOutput) {
-        Instant start = Instant.now();
+        long start = System.nanoTime();
         deserializeElement(index, serializerOutput);
-        Instant end = Instant.now();
+        long end = System.nanoTime();
         storeDurationAfterWarmUpPeriod(index, TestEvent.DESERIALIZE, start, end);
     }
 
     private SERIALIZER_OUTPUT serializeElementAndMeasureDuration(int index, TO_SERIALIZE element) {
-        Instant start= Instant.now();
+        long start = System.nanoTime();
         SERIALIZER_OUTPUT serializerOutput = serializeElement(index, element);
-        Instant end = Instant.now();
+        long end = System.nanoTime();
         storeDurationAfterWarmUpPeriod(index, TestEvent.SERIALIZE, start, end);
         return serializerOutput;
     }
 
     private TO_SERIALIZE createElementAndMeasureDuration(int index) {
-        Instant start = Instant.now();
+        long start = System.nanoTime();
         TO_SERIALIZE element = createElement(index);
-        Instant end = Instant.now();
+        long end = System.nanoTime();
         storeDurationAfterWarmUpPeriod(index, TestEvent.CREATE, start, end);
         return element;
     }
 
-    private void storeDurationAfterWarmUpPeriod(int index, TestEvent event, Instant start, Instant end) {
+    private void storeDurationAfterWarmUpPeriod(int index, TestEvent event, long start, long end) {
         if (setWarmUpRoundsForTestRun < index) {
             storeDuration(event, start, end);
         }
@@ -94,7 +96,7 @@ public abstract class PerformanceTestRun<TO_SERIALIZE, SERIALIZER_OUTPUT> {
     protected abstract void deserializeElement(int index, SERIALIZER_OUTPUT serializer_output);
 
 
-    private void storeDuration(TestEvent event, Instant start, Instant end) {
+    private void storeDuration(TestEvent event, long start, long end) {
         statisticsCollector.addDuration(this.getClass(), event, start, end);
     }
 
@@ -102,6 +104,12 @@ public abstract class PerformanceTestRun<TO_SERIALIZE, SERIALIZER_OUTPUT> {
         this.setWarmUpRoundsForTestRun = warmUpRoundsForTestRun;
     }
 
+    /**
+     * Set the StatisticsCollector to be used.
+     * Overrides the default no-op implementation
+     *
+     * @param statisticsCollector
+     */
     public void setStatisticsCollector(StatisticsCollector statisticsCollector) {
         this.statisticsCollector = statisticsCollector;
     }
