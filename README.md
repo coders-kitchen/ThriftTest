@@ -21,6 +21,14 @@ After checkout the thrift compiler must be execute with the following parameters
      
 from the source directory of the project
 
+## Build
+
+Execute
+
+    ./gradlew clean distZip
+
+and unpack the result from build/distributions to a directory of your choice
+
 ## Parameters
 
   * --elementsPerRound : elements created, serialized, deserialized within one round per test runner (Default: 200_000)
